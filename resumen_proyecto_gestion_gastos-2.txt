@@ -1,0 +1,150 @@
+RESUMEN PROFESIONAL DEL PROYECTO
+APLICACIÓN DE GESTIÓN DE GASTOS PERSONALES
+============================================================
+
+
+1. OBJETIVO DEL PROYECTO
+============================================================
+
+Desarrollar una solución integral de gestión de gastos personales que
+elimine la fricción del registro manual de transacciones, mediante la
+detección automática de compras a partir de la bandeja de correo del
+usuario, complementada con visualización analítica de datos y
+accesibilidad inmediata a través de un widget de pantalla de inicio.
+
+Objetivo específico (diferenciador de producto):
+Resolver un único problema de forma sobresaliente antes que competir
+en cantidad de funcionalidades: automatizar el registro de gastos sin
+intervención manual del usuario, delegando la carga cognitiva de
+"anotar cada compra" a un sistema de detección basado en la lectura
+de correos de confirmación de compra (Gmail API).
+
+Objetivos secundarios:
+- Ofrecer visualización comparativa de gastos (mes a mes, año contra
+  año) mediante gráficas dinámicas y de fácil interpretación.
+- Permitir acceso inmediato al estado financiero del usuario sin
+  necesidad de abrir la aplicación, mediante un widget nativo de
+  pantalla de inicio.
+- Proveer un panel de administración web que permita mantener y
+  ajustar la lógica de categorización del sistema sin requerir
+  actualizaciones de la aplicación móvil.
+
+
+2. ESTRUCTURA DEL PROYECTO
+============================================================
+
+El proyecto está compuesto por tres componentes de software
+independientes que se comunican exclusivamente a través de una API
+REST centralizada:
+
+2.1 Aplicación móvil (cliente final)
+-------------------------------------
+Tecnología: Flutter (Dart)
+Responsable de: interfaz de usuario, autenticación, visualización de
+transacciones, gráficas comparativas, widget de pantalla de inicio,
+y flujo de autorización OAuth hacia Gmail.
+
+Arquitectura interna organizada por features (auth, dashboard,
+transactions), cada una separada en capas de presentación (pantallas)
+y datos (repositorios que consumen la API). Manejo de estado mediante
+Riverpod. Diseño basado en un sistema de diseño propio (paleta de
+colores, tipografía y espaciados centralizados) para mantener
+consistencia visual en toda la aplicación.
+
+2.2 Panel de administración web
+-------------------------------------
+Tecnología: Vue 3 (Vite, TypeScript)
+Responsable de: gestión de categorías de gasto, gestión de reglas de
+categorización automática, y (en desarrollo) dashboard de analítica de
+producto.
+
+Este panel permite modificar la lógica de negocio del sistema
+(categorías y reglas de clasificación) sin necesidad de publicar una
+nueva versión de la aplicación móvil.
+
+2.3 Backend (API REST)
+-------------------------------------
+Tecnología: Node.js con NestJS, Prisma ORM, base de datos PostgreSQL
+Responsable de: autenticación (JWT), lógica de negocio, persistencia
+de datos, integración OAuth con Gmail API, parsing de correos de
+compra, y endpoints de agregación de datos para las gráficas
+comparativas.
+
+Módulos implementados: auth, users, categories, categorization-rules,
+transactions, gmail (integración OAuth + sincronización + detección
+automática de transacciones).
+
+2.4 Modelo de datos
+-------------------------------------
+Entidades principales: User, Category, CategorizationRule,
+Transaction, GmailConnection. El diseño separa explícitamente las
+categorías y las reglas de categorización de las transacciones, de
+forma que la lógica de clasificación automática pueda administrarse
+de forma independiente desde el panel web.
+
+
+3. METODOLOGÍA DE TRABAJO
+============================================================
+
+3.1 Enfoque general
+-------------------------------------
+Desarrollo incremental por fases, donde cada fase construye sobre la
+anterior y se valida antes de avanzar a la siguiente. Se prioriza
+tener una funcionalidad núcleo sólida (detección automática de
+gastos) antes que expandir hacia funcionalidades secundarias.
+
+3.2 Fases de desarrollo
+-------------------------------------
+Fase 1 — Fundamentos: definición del modelo de datos, configuración
+inicial de los tres proyectos (backend, aplicación móvil, panel web),
+y establecimiento de convenciones de estructura de carpetas.
+
+Fase 2 — Backend núcleo: implementación de autenticación, CRUD de
+categorías y reglas de categorización, y CRUD de transacciones con
+endpoints de agregación de datos.
+
+Fase 3 — Aplicación móvil: integración de las gráficas comparativas
+con datos reales del backend, conexión completa de autenticación,
+flujo de conexión con Gmail, y sincronización de datos con el widget
+de pantalla de inicio.
+
+Fase 4 — Panel de administración (en curso): vistas de gestión de
+categorías y reglas de categorización, y dashboard de analítica de
+producto.
+
+3.3 Organización del equipo
+-------------------------------------
+Equipo de dos personas con niveles de experiencia distintos. La
+distribución de tareas se diseñó de forma progresiva: las tareas de
+mayor complejidad técnica (arquitectura, seguridad, integraciones
+externas) se asignan al integrante con mayor experiencia, mientras
+que el integrante con menos experiencia recibe tareas estructuradas
+siguiendo patrones ya establecidos (por ejemplo, un módulo CRUD ya
+implementado como referencia para replicar en módulos similares),
+incrementando gradualmente el nivel de dificultad para favorecer el
+aprendizaje real sin comprometer el avance del proyecto.
+
+3.4 Principios de diseño de producto aplicados
+-------------------------------------
+- Priorización de un único diferenciador de producto bien resuelto,
+  evitando la dispersión en funcionalidades no esenciales para el
+  producto mínimo viable.
+- Validación con datos reales del propio desarrollador antes de
+  incorporar nuevas funcionalidades.
+- Consistencia visual mediante un sistema de diseño centralizado,
+  referenciando patrones de interfaz validados en aplicaciones
+  existentes del mismo rubro (gestión financiera).
+
+3.5 Herramientas de gestión de código
+-------------------------------------
+Repositorio único con los tres proyectos organizados en carpetas
+independientes (backend, admin-panel, app_flutter), sin herramientas
+de monorepo adicionales, dado que dos de los tres proyectos no
+comparten ecosistema de lenguaje (Flutter/Dart frente a
+Node.js/TypeScript) y no existe, en esta etapa, código compartido
+entre ellos que justifique esa complejidad adicional.
+
+
+============================================================
+FIN DEL DOCUMENTO
+============================================================
